@@ -28,12 +28,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //TODO Sacar estos textviews
         mLatitudeText = findViewById<View>(R.id.textViewLat) as TextView
         mLongitudeText = findViewById<View>(R.id.textViewLong) as TextView
-        //NOTE Variable con el cliente de FusedLocation
+        //NOTE  Variable con el cliente de FusedLocation
+        //      Es lo que hace el pedido de ubicacion
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        //NOTE Callback del pedido de locacion, objeto con la locacion, llamado al recebirlo
+        //NOTE  Callback del pedido de ubicacion
+        //      Cuando FuzedLocation haga el pedido, al recibirlo llama este callback
+        //      Contiene el locationResult con la ubicacion
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return //?
@@ -50,18 +54,17 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        //NOTE Crea el pedido de locacion
         createLocationRequest()
     }
 
     fun createLocationRequest() {
+        //NOTE Crea el locationRequest, parametros usados para el pedido de ubicacion
         locationRequest = LocationRequest.create()?.apply { //Quitado ? despues de create()
             interval = 10000
             fastestInterval = 5000 //TODO Bajar intervalo?
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         //val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest) //Necesario?
-
     }
 
     override fun onResume() {
@@ -73,19 +76,20 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
-
+        //NOTE  el FuzedLocation hace un pedido de ubicacion usando la configuracion del locationRequest
+        //      y al recibir respuesta llama el locationCallback
         mFusedLocationClient!!.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
     }
 
     //SECTION Pide Permisos
     private fun askForPermissions() {
-        //NOTE Si el FINE o COARSE no tienen permisos
+        //NOTE Si no estan los permisos FINE o COARSE
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED)
         {
-            //NOTE ?
+            //NOTE (?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION))
