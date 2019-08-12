@@ -12,3 +12,6 @@ https://developer.android.com/training/location/receive-location-updates#kotlin
 
   * Dibujar en mapa
 - https://medium.com/@irenenaya/drawing-path-between-two-points-in-google-maps-with-kotlin-in-android-app-af2f08992877
+
+  * Agregar mapa
+  https://developers.google.com/maps/documentation/android-sdk/config
