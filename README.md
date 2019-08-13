@@ -12,3 +12,14 @@ https://developer.android.com/training/location/receive-location-updates#kotlin
 
   * Dibujar en mapa
 - https://medium.com/@irenenaya/drawing-path-between-two-points-in-google-maps-with-kotlin-in-android-app-af2f08992877
+
+  * Agregar key en manifest
+- https://developers.google.com/maps/documentation/android-sdk/config
+
+  * Agregar Mapa
+- https://developers.google.com/maps/documentation/android-sdk/map
+
+  * Arreglar clase mapas faltante
+- https://stackoverflow.com/questions/26901149/com-google-android-gms-maps-mapfragment-cannot-resolve-symbol-maps
+Agregar implement google play map service 
+- https://github.com/googlemaps/android-samples/blob/master/ApiDemos/kotlin/app/build.gradle
