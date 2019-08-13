@@ -18,3 +18,8 @@ https://developer.android.com/training/location/receive-location-updates#kotlin
 
   * Agregar Mapa
 - https://developers.google.com/maps/documentation/android-sdk/map
+
+  * Arreglar clase mapas faltante
+- https://stackoverflow.com/questions/26901149/com-google-android-gms-maps-mapfragment-cannot-resolve-symbol-maps
+Agregar implement google play map service 
+- https://github.com/googlemaps/android-samples/blob/master/ApiDemos/kotlin/app/build.gradle
