@@ -33,6 +33,15 @@
                 android:text="00"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textViewLat"/>
+
+
+
     </LinearLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/map"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              class="com.google.android.gms.maps.SupportMapFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
