@@ -11,4 +11,4 @@
 /build
 /captures
 .externalNativeBuild
-android/app/src/main/AndroidManifest.xml
+/app/src/main/AndroidManifest.xml
