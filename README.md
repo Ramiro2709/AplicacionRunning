@@ -23,3 +23,9 @@ https://developer.android.com/training/location/receive-location-updates#kotlin
 - https://stackoverflow.com/questions/26901149/com-google-android-gms-maps-mapfragment-cannot-resolve-symbol-maps
 Agregar implement google play map service 
 - https://github.com/googlemaps/android-samples/blob/master/ApiDemos/kotlin/app/build.gradle
+
+ * Ejemplos Map
+ - Layout
+ https://github.com/googlemaps/android-samples/blob/master/ApiDemos/java/app/src/main/res/layout/basic_demo.xml
+ - Activity
+ https://github.com/googlemaps/android-samples/blob/master/ApiDemos/kotlin/app/src/main/java/com/example/kotlindemos/BasicMapDemoActivity.kt
