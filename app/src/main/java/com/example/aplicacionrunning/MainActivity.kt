@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
-//import androidx.fragment.app.FragmentActivity //NOTE importar
 import android.os.Bundle
 import android.util.Log
 import android.view.View
