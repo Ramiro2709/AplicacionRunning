@@ -18,7 +18,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 
 
 //NOTE Se agrega el OnMapReadyCallBack para poder usar los mapas
@@ -36,6 +37,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mLongitudeText: TextView? = null
 
     private var mapFragment: SupportMapFragment? = null
+
+    private lateinit var mutablePolyline: Polyline
+
+    val listCoordenadas = mutableListOf<LatLng>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +65,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 //NOTE Agrega un marcador en la posicion actual
+                /*
                 mapaRecibido!!.addMarker(
                     MarkerOptions()
                         //.position(LatLng(0.0, 0.0))
                         .position(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude))
                         .title("Marker")
                 )
+                */
+
+                //NOTE Agrega coordenada actual a la lista de coordenadas a dibujar
+                listCoordenadas.add(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude))
+
+                //NOTE Crea Poline con las coordenadas de la lista
+                mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{
+                    addAll(listCoordenadas)
+                })
             }
         }
         askForPermissions()
