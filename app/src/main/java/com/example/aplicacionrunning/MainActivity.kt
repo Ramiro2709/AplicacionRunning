@@ -3,11 +3,13 @@ package com.example.aplicacionrunning
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,9 +35,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     protected var mLastLocation: Location? = null
 
-    private var mLatitudeText: TextView? = null
-    private var mLongitudeText: TextView? = null
-
     private var mapFragment: SupportMapFragment? = null
 
     private lateinit var mutablePolyline: Polyline
@@ -45,9 +44,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //TODO Sacar estos textviews
-        mLatitudeText = findViewById<View>(R.id.textViewLat) as TextView
-        mLongitudeText = findViewById<View>(R.id.textViewLong) as TextView
+
+        val buttonEmpezar = findViewById(R.id.buttonEmpezar) as Button
+        //NOTE  Al apretar el boton empeiza a actualizar ubicacion
+        //      Al apretarlo otra vez lo detiene
+        var actualizando: Boolean = false;
+        buttonEmpezar.setOnClickListener {
+            if (!actualizando){
+                actualizando = true;
+                startLocationUpdates()
+                buttonEmpezar.text = "Detener"
+            } else {
+                actualizando = false;
+                stopLocationUpdates()
+                buttonEmpezar.text = "Empezar"
+            }
+        }
+
         //NOTE  Variable con el cliente de FusedLocation
         //      Es lo que hace el pedido de ubicacion
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -59,28 +72,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return //?
                 for (location in locationResult.locations){
-                    //NOTE !! Es para solo asignar cuando no es null(?
                     mLastLocation = location;
-                    mLongitudeText!!.text = location.toString();
                 }
-
-                //NOTE Agrega un marcador en la posicion actual
-                /*
-                mapaRecibido!!.addMarker(
-                    MarkerOptions()
-                        //.position(LatLng(0.0, 0.0))
-                        .position(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude))
-                        .title("Marker")
-                )
-                */
 
                 //NOTE Agrega coordenada actual a la lista de coordenadas a dibujar
                 listCoordenadas.add(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude))
 
                 //NOTE Crea Poline con las coordenadas de la lista
-                mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{
+                mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{ //NOTE !! Es para solo asignar cuando no es null(?
+                    color(Color.BLUE)
                     addAll(listCoordenadas)
+                    width(5f)
                 })
+
+                with(mapaRecibido) {
+                    this!!.moveCamera(CameraUpdateFactory.newLatLngZoom( listCoordenadas.last(), 16f))
+                }
             }
         }
         askForPermissions()
@@ -97,12 +104,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         createLocationRequest()
     }
 
+
+
     fun createLocationRequest() {
         //NOTE Crea el locationRequest, parametros usados para el pedido de ubicacion
         locationRequest = LocationRequest.create()?.apply { //Quitado ? despues de create()
             interval = 10000
-            fastestInterval = 5000 //TODO Bajar intervalo?
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
         //val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest) //Necesario?
     }
@@ -110,15 +119,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         //if (requestingLocationUpdates) //?
-        startLocationUpdates()
-        //TODO Detener updates
+        //startLocationUpdates()
     }
 
     @SuppressLint("MissingPermission")
+
+    //NOTE Empieza a recibir la ubicacion
     private fun startLocationUpdates() {
         //NOTE  el FuzedLocation hace un pedido de ubicacion usando la configuracion del locationRequest
         //      y al recibir respuesta llama el locationCallback
         mFusedLocationClient!!.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+    }
+
+    //NOTE Para de recibir
+    private fun stopLocationUpdates() {
+        mFusedLocationClient!!.removeLocationUpdates(locationCallback)
     }
 
 
