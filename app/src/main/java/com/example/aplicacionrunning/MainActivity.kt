@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //NOTE Mueve camara a ultima posicion
                 with(mapaRecibido) {
-                    this!!.moveCamera(CameraUpdateFactory.newLatLngZoom( listCoordenadas.last(), 16f))
+                    this!!.moveCamera(CameraUpdateFactory.newLatLngZoom( listCoordenadas.last(), 17f))
                 }
 
                 if (::marcador.isInitialized) marcador.remove()

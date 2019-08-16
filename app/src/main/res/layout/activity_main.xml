@@ -10,27 +10,36 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="App Running"
-                android:textSize="30sp"
-        />
-        <Button
-                android:text="Empezar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/buttonEmpezar"/>
+            android:layout_height="match_parent" tools:layout_editor_absoluteY="-61dp"
+            tools:layout_editor_absoluteX="0dp">
 
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <TextView
+                    android:text="Estado:"
+                    android:layout_height="wrap_content" android:id="@+id/textView3" android:layout_weight="1"
+                    android:layout_width="wrap_content"/>
+            <Button
+                    android:text="Empezar"
+                    android:layout_width="154dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/buttonEmpezar"
+                    android:backgroundTint="#FFEB3B"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-black"
+            />
+        </LinearLayout>
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/map"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  class="com.google.android.gms.maps.SupportMapFragment" />
+
+                  class="com.google.android.gms.maps.SupportMapFragment"/>
 
 
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
