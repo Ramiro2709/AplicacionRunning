@@ -18,10 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 
 
 //NOTE Se agrega el OnMapReadyCallBack para poder usar los mapas
@@ -38,6 +35,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mapFragment: SupportMapFragment? = null
 
     private lateinit var mutablePolyline: Polyline
+    private lateinit var marcador: Marker
 
     val listCoordenadas = mutableListOf<LatLng>()
 
@@ -82,12 +80,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{ //NOTE !! Es para solo asignar cuando no es null(?
                     color(Color.BLUE)
                     addAll(listCoordenadas)
-                    width(5f)
+                    width(10f)
                 })
 
+                //NOTE Mueve camara a ultima posicion
                 with(mapaRecibido) {
                     this!!.moveCamera(CameraUpdateFactory.newLatLngZoom( listCoordenadas.last(), 16f))
                 }
+
+                if (::marcador.isInitialized) marcador.remove()
+                marcador = mapaRecibido!!.addMarker(
+                    MarkerOptions()
+                        .position(listCoordenadas.last())
+                        .title("Posicion Actual")
+                )
             }
         }
         askForPermissions()
