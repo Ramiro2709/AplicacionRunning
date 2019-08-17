@@ -30,6 +30,15 @@
                     android:textColor="#FFFFFF"
                     android:fontFamily="sans-serif-black"
             />
+            <Button
+                    android:text="Terminar"
+                    android:layout_width="154dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/buttonTerminar"
+                    android:backgroundTint="#FFEB3B"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_weight="1"/>
         </LinearLayout>
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/map"

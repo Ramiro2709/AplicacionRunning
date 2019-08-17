@@ -59,6 +59,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        val buttonTerminar = findViewById(R.id.buttonTerminar) as Button
+        buttonTerminar.setOnClickListener {
+            listCoordenadas.clear()
+            marcador.remove()
+            mutablePolyline.remove()
+            stopLocationUpdates()
+            val textView: TextView = findViewById(R.id.textView3) as TextView
+            // TODO Al terminar calcular distancia total recorrida y velocidad promedio y mostrarlo en pantalla
+        }
+
         //NOTE  Variable con el cliente de FusedLocation
         //      Es lo que hace el pedido de ubicacion
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -94,6 +104,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         .position(listCoordenadas.last())
                         .title("Posicion Actual")
                 )
+
+                //NOTE Distancia entre dos ultimas coordenadas
+                if (listCoordenadas.size > 1){
+                    val loc1 = Location("")
+                    loc1.latitude = mLastLocation!!.latitude
+                    loc1.longitude = mLastLocation!!.longitude
+
+                    val loc2 = Location("")
+                    loc2.latitude = listCoordenadas[listCoordenadas.size-2].latitude
+                    loc2.longitude = listCoordenadas[listCoordenadas.size-2].longitude
+
+                    var distancia = loc1.distanceTo(loc2)
+
+                    val textView: TextView = findViewById(R.id.textView3) as TextView
+                    textView.text = distancia.toString()
+                }
             }
         }
         askForPermissions()
