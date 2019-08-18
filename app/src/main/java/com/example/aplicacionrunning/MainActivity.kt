@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private val TAG = "MyActivity"
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
     private lateinit var locationCallback: LocationCallback
@@ -59,14 +60,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        // Borra el recorrido
         val buttonTerminar = findViewById(R.id.buttonTerminar) as Button
         buttonTerminar.setOnClickListener {
             listCoordenadas.clear()
             marcador.remove()
             mutablePolyline.remove()
             stopLocationUpdates()
-            val textView: TextView = findViewById(R.id.textView3) as TextView
-            // TODO Al terminar calcular distancia total recorrida y velocidad promedio y mostrarlo en pantalla
         }
 
         //NOTE  Variable con el cliente de FusedLocation
@@ -78,16 +78,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //      Contiene el locationResult con la ubicacion
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return //?
+                locationResult ?: return
                 for (location in locationResult.locations){
                     mLastLocation = location;
                 }
 
                 //NOTE Agrega coordenada actual a la lista de coordenadas a dibujar
                 listCoordenadas.add(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude))
+                listCoordenadas.forEach {
+                    Log.i(TAG, "listCoordenadas: " + it);
+                }
 
                 //NOTE Crea Poline con las coordenadas de la lista
-                mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{ //NOTE !! Es para solo asignar cuando no es null(?
+                mutablePolyline = mapaRecibido!!.addPolyline(PolylineOptions().apply{
                     color(Color.BLUE)
                     addAll(listCoordenadas)
                     width(10f)
@@ -98,6 +101,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     this!!.moveCamera(CameraUpdateFactory.newLatLngZoom( listCoordenadas.last(), 17f))
                 }
 
+                // Agrega marcador en la ultima posicion
                 if (::marcador.isInitialized) marcador.remove()
                 marcador = mapaRecibido!!.addMarker(
                     MarkerOptions()
@@ -107,18 +111,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //NOTE Distancia entre dos ultimas coordenadas
                 if (listCoordenadas.size > 1){
+                    Log.i(TAG, "listCoordenadas ultimo : " + listCoordenadas.last());
                     val loc1 = Location("")
-                    loc1.latitude = mLastLocation!!.latitude
-                    loc1.longitude = mLastLocation!!.longitude
+                    loc1.latitude = listCoordenadas.last().latitude
+                    loc1.longitude = listCoordenadas.last().longitude
 
+                    Log.i(TAG, "listCoordenadas anteultimo : " + listCoordenadas[listCoordenadas.lastIndex-1]);
                     val loc2 = Location("")
-                    loc2.latitude = listCoordenadas[listCoordenadas.size-2].latitude
-                    loc2.longitude = listCoordenadas[listCoordenadas.size-2].longitude
+                    loc2.latitude = listCoordenadas[listCoordenadas.lastIndex-1].latitude
+                    loc2.longitude = listCoordenadas[listCoordenadas.lastIndex-1].longitude
 
                     var distancia = loc1.distanceTo(loc2)
 
-                    val textView: TextView = findViewById(R.id.textView3) as TextView
-                    textView.text = distancia.toString()
+                    //val textView: TextView = findViewById(R.id.textView3) as TextView
+                    //textView.text = distancia.toString()
                 }
             }
         }
@@ -145,13 +151,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
-        //val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest) //Necesario?
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //if (requestingLocationUpdates) //?
-        //startLocationUpdates()
     }
 
     @SuppressLint("MissingPermission")
@@ -183,7 +182,6 @@ if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCA
     ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION
     ) != PackageManager.PERMISSION_GRANTED)
 {
-    //NOTE (?
     if (ActivityCompat.shouldShowRequestPermissionRationale(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION))
